@@ -8,7 +8,7 @@ interface LoginProps {
     password: string;
 }
 
-const Login = (): JSX.Element => {
+const LoginPage = (): JSX.Element => {
     const navigate = useNavigate();
     const { register, handleSubmit, reset, formState: {errors} } = useForm<LoginProps>();
     async function LoginData(data: LoginProps){
@@ -72,9 +72,25 @@ const Login = (): JSX.Element => {
                                     <Text w="100%" color="orange" fontSize="16px" fontWeight="700">senha e um dado obrigatorio</Text>                                    
                                 )
                             }
-                    <Button w="100%" type="button" h="50px" radius="27px" color="white" mt="57px" fontWeight="700" fontSize="18px" bg="linear-gradient(#FF6489, #F9B24E)" border="none" onClick={() => handleSubmit(LoginData)()}>Continuar</Button>
+                    <Button 
+                        w="100%" 
+                        type="button" 
+                        h="50px" 
+                        radius="27px" 
+                        color="white" 
+                        mt="57px" 
+                        fontWeight="700" 
+                        fontSize="18px" 
+                        bg="linear-gradient(to right, #FF6489, #F9B24E)" 
+                        border="none" 
+                        onClick={() => handleSubmit(LoginData)()}
+                        >
+                            Continuar
+                        </Button>
+
                     <Hr w="100%" h="1px" radius="8px" m="18px 0" bg="linear-gradient(#FF6489 30%, #F9B24E 50%)" />
                     <Button 
+                        type="button"
                         w="100%"
                         h="50px"
                         radius="27px"
@@ -91,4 +107,4 @@ const Login = (): JSX.Element => {
     )
 };
 
-export default Login;
+export default LoginPage;
