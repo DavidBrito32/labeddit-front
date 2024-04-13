@@ -1,28 +1,66 @@
 import { useForm } from "react-hook-form";
 import Header from "../../components/header";
-import Posts from "../../components/posts";
-import { Button, Container, Form, Hr, Label, Text, TextArea } from "../../styles/styled";
+import { Button, Container, Form, Hr, Label, List, Text, TextArea } from "../../styles/styled";
 import { API } from "../../services/API";
-import { usePosts } from "../../hooks/usePosts";
+import ItemsPost from "../../components/posts/items";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { FaX } from "react-icons/fa6";
+import { useComments } from "../../hooks/useComments";
+import Comentarios from "../../components/comments";
 
 interface CreatePost {
-    content: string;
+    comment: string;
 }
 
-const FeedPage = () => {
-    const { data, error, loading, getPosts } = usePosts();
+interface Posts {
+    id: string;
+    creatorId: string;
+    creatorName: string;
+    content: string;
+    like: number;
+    dislike: number;
+    comments: number;
+    createdAt: string;
+    updatedAt: string;
+}
+
+const PostPage = () => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm<CreatePost>();
+    const { id } = useParams();
+    const { data: Comments, error, loading, getComments } = useComments(id as string);
+    const [data, setData] = useState<Posts>({
+        id: "",
+        comments: 0,
+        content: "",
+        createdAt: "",
+        creatorId: "",
+        creatorName: "",
+        dislike: 0,
+        like: 0,
+        updatedAt: ""
+    });
     const headers = {
         headers: {
             authorization: `Bearer ${localStorage.getItem("token")}`
         }
     }
 
-    const createPost = async (data: CreatePost): Promise<void> => {
-        await API.post("/posts", data, headers).then((response) => {
+    const getPostById = async () => {
+        await API.get(`/posts/${id}`, headers).then((item) => {
+            setData(item.data as Posts);
+        })
+    };
+
+    useEffect(() => {
+        getPostById();
+    }, [id]);  
+
+    const createCommentInPost = async (data: CreatePost): Promise<void> => {
+        await API.post(`/posts/comments/${id}`, data, headers).then((response) => {
             console.log(response);
-            getPosts();
             reset();
+            getComments();
         }).catch((err) => {
             console.log(err);
         })
@@ -31,8 +69,15 @@ const FeedPage = () => {
 
     return (
         <>  
-        <Header />
+        <Header>
+            <FaX />
+        </Header>
             <Container w="100%" p="0 32px">
+
+                <List>
+                    <ItemsPost data={data} getPosts={getPostById} />
+                </List>
+
                 <Form w="100%" mt="32px">
                     <Label w="100%" display="flex" align="center" flexdir="column">
                         <TextArea 
@@ -43,13 +88,13 @@ const FeedPage = () => {
                         minH="131px" 
                         radius="12px" 
                         p="18px 18px" 
-                        placeholder="Digite alguma coisa" 
-                        {...register("content", {
+                        placeholder="Escreva seu comentario" 
+                        {...register("comment", {
                             required: true
                         })}
                         />
                     </Label>
-                    {errors.content?.type === "required" && (
+                    {errors.comment?.type === "required" && (
                         <Text color="red" fontWeight="700" textAlign="center" mt="10px">Escreva algo para poder enviar, um post com palavras eh muito mais bonito</Text>
                     )}
                     <Button 
@@ -63,9 +108,9 @@ const FeedPage = () => {
                         fontSize="18px" 
                         bg="linear-gradient(to right, #FF6489, #F9B24E)" 
                         border="none"
-                        onClick={() => handleSubmit(createPost)()}
+                        onClick={() => handleSubmit(createCommentInPost)()}
                         >
-                            Continuar
+                            Comentar
                         </Button>
                 </Form>
                 <Hr 
@@ -82,13 +127,14 @@ const FeedPage = () => {
                 }
                 {
                     loading && (
-                        <Text>Carregando...</Text>
+                        <Text>Loading . . .</Text>
                     )
                 }
-                <Posts data={data} getPosts={getPosts} />
+
+                <Comentarios data={Comments} getPosts={getComments} />                
             </Container>
         </>
     );
 };
 
-export default FeedPage;
+export default PostPage;

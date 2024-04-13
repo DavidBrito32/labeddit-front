@@ -6,9 +6,10 @@ interface Props {
 }
 
 export const CheckToken = ({ children }: Props): JSX.Element => {
+
   const token: string | null = localStorage.getItem("token");
 
-  if (!token) {
+  if (!token || token?.length < 10) {
     return (
       <>
         {" "}
