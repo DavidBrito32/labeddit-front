@@ -55,22 +55,16 @@ const ItemsComments = ({ data, getPosts }: Posts) => {
     CheckLikes();
     getPosts();
   }, [flags.like, flags.dislike]);
-  
-
-  const toogleLike = () =>
-    setFlags({ ...flags, like: !flags.like, dislike: false });
-  const toogleDislike = () =>
-    setFlags({ ...flags, dislike: !flags.dislike, like: false });
 
   const like = async (): Promise<void> => {
     await API.post(`posts/comments/${data.id}/like`, {like: true}, headers).then(() => {
-      toogleLike();  
+      setFlags({ ...flags, like: !flags.like, dislike: false });
     });
   }
 
   const dislike = async (): Promise<void> => {
     await API.post(`posts/comments/${data.id}/like`, {like: false}, headers).then(() => {
-      toogleDislike();   
+      setFlags({ ...flags, dislike: !flags.dislike, like: false }); 
     });
   }
 
@@ -78,22 +72,37 @@ const ItemsComments = ({ data, getPosts }: Posts) => {
   return (
     <>
       <Items
-        border="1px solid #6F6F6F"
-        gap="18px"
-        display="flex"
-        flexdir="column"
-        radius="12px"
-        p="9px 10px"
-      >
-        <Text w="100%" color="#6F6F6F" fontSize="12px" fontWeight="400">
+          border="1px solid #6F6F6F"
+          gap="18px"
+          display="flex"
+          flexdir="column"
+          radius="12px"
+          p="9px 10px"
+        >
+        <Text 
+          w="100%" 
+          color="#6F6F6F" 
+          fontSize="12px" 
+          fontWeight="400"
+          >
           Enviado por: <strong>{data.creatorName}</strong>
         </Text>
 
-        <Text fontSize="18px" color="black" fontWeight="400" w="100%">
+        <Text 
+          fontSize="18px" 
+          color="black" 
+          fontWeight="400" 
+          w="100%"
+          >
           {data.comment}
         </Text>
 
-        <Container display="flex" gap="15px" align="center" w="100%">
+        <Container 
+          display="flex" 
+          gap="15px" 
+          align="center" 
+          w="100%"
+          >
           <Container
             radius="28px"
             p="5px 10px"

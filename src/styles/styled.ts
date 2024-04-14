@@ -116,6 +116,22 @@ export const Image = styled.img<StyledProps>`
         }
 `;
 
+export const Modal = styled.div`
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #00000066;
+    z-index: 10;
+    top: 0;
+    left: 0;
+`;
+
+
+
+
 export const Form = styled.form<StyledProps>`
     @media only screen and (max-width: 500px){
         width: ${props => props.w || "auto"};
@@ -324,9 +340,9 @@ export const Link = styled.a<StyledProps>`
        }
 `;
 
-export const Spinner = styled.div`
-    width: 35px;
-    height: 35px;
+export const Spinner = styled.div<StyledProps>`
+     width: ${props => props.w || "35px"};
+            height: ${props => props.h || "35px"};
     border-radius: 50%;
     border: 5px solid transparent;
     border-top-color: white;

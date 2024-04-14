@@ -31,7 +31,8 @@ const ItemsPost = ({ data, getPosts }: Posts) => {
 
   const openPost = (id: string): void => {
     navigate(`/${id}`);
-}
+  }
+  
   const [flags, setFlags] = useState<Flags>({
     like: false,
     dislike: false,
@@ -42,7 +43,6 @@ const ItemsPost = ({ data, getPosts }: Posts) => {
       Authorization: `Bearer ${localStorage.getItem("token")}`
     }
   };
-
   const Liked = async () => {
     await API.get(`/posts/${data.id}/like`, headers).then((item) => {
       if(item.data.like === 1){
@@ -62,10 +62,7 @@ const ItemsPost = ({ data, getPosts }: Posts) => {
   useEffect(() => {
     Liked();
     getPosts();
-  }, [flags.like, flags.dislike]);
-
-
-  
+  }, [flags.like, flags.dislike]);  
 
   const toogleLike = () =>
     setFlags({ ...flags, like: !flags.like, dislike: false });

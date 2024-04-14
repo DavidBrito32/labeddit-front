@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { List } from "../../styles/styled";
 import ItemsPost from "./items";
 
@@ -18,7 +17,6 @@ interface Props {
     data: Array<Posts>;
     getPosts: () => Promise<void>;
 }
-
 
 const Posts = ({data, getPosts}: Props) => {
     return (

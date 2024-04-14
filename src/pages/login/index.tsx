@@ -1,4 +1,5 @@
 import { Button, Container, Form, Hr, Image, Input, Label, Spinner, Text } from "../../styles/styled";
+import { motion } from "framer-motion";
 import Logo from "../../assets/Logo.svg";import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { API } from "../../services/API";
@@ -34,6 +35,12 @@ const LoginPage = (): JSX.Element => {
     }
     return (
         <>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+        >
+
             <Container align="center" p="0 33px" w="100%" minH="100vh" h="100vh" display="flex" justify="center" flexdir="column">
                 <Image display="block" src={Logo} w={"150px"} h={"150px"}  />
                 <Text fontSize="16px" fontWeight="300">O projeto de rede social da Labenu</Text>
@@ -42,7 +49,7 @@ const LoginPage = (): JSX.Element => {
                     display="flex"
                     flexdir="column"
                     gap="10px"
-                >
+                    >
                     
                     <Label w="100%" h="50px">
                         <Input 
@@ -124,6 +131,7 @@ const LoginPage = (): JSX.Element => {
                         >Crie uma conta!</Button>
                 </Form>
             </Container>
+        </motion.div>
         </>
     )
 };
