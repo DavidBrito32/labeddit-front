@@ -32,6 +32,7 @@ const SignupPage = (): JSX.Element => {
     formState: { errors },
   } = useForm<SignupProps>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function signupData(data: SignupProps) {
     setLoading(true);
@@ -46,6 +47,7 @@ const SignupPage = (): JSX.Element => {
       .catch((err) => {
         console.log(err);
         setLoading(false);
+        setError(err.response.data);
       });
   }
 
@@ -126,6 +128,11 @@ const SignupPage = (): JSX.Element => {
                 senha e um dado obrigatorio
               </Text>
             )}
+            {
+                error !== null && (
+                  <Text w="100%" color="orange" fontSize="16px" fontWeight="700">{error}</Text>
+                )
+              }
             <Text fontSize="14px" mt="65px" w="100%">
               Ao continuar, você concorda com o nosso{" "}
               <Link display="inline" color="blue" fontWeight="500">

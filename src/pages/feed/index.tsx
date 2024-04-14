@@ -110,7 +110,17 @@ const FeedPage = () => {
           />
           {error !== null && <Text>{error}</Text>}
           {loading && <Loading />}
-
+          {data.length < 1 && (
+            <>
+              <Text fontWeight="bold" fontSize="21px" textAlign="center">
+                Esta tudo calmo por aqui! 🍀
+              </Text>
+              <Text fontWeight="400" fontSize="16px" textAlign="center">
+                Esperimente comentar algo! Todos devem estar loucos para saber o
+                que voce tem a dizer! 🌟🎉
+              </Text>
+            </>
+          )}
           <Posts data={data} getPosts={getPosts} />
         </Container>
       </motion.div>

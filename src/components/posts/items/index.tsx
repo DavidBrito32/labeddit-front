@@ -3,36 +3,41 @@ import { Container, Items, Text } from "../../../styles/styled";
 import { IoChatboxOutline } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { API } from "../../../services/API";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface Flags {
   like: boolean;
   dislike: boolean;
 }
 
+interface Valor {
+  id: string;
+  creatorName: string;
+  creatorId: string;
+  content: string;
+  like: number;
+  dislike: number;
+  comments: number;
+  createdAt: string;
+  updatedAt: string;
+  postComment?: string;
+}
+
 type Posts = {
-  data: {
-    id: string;
-    creatorName: string;
-    creatorId: string;
-    content: string;
-    like: number;
-    dislike: number;
-    comments: number;
-    createdAt: string;
-    updatedAt: string;
-    postComment?: string;
-  },
-  getPosts: () => Promise<void>
+  data: Valor;
+  getPosts: () => Promise<void>;
 };
 
 const ItemsPost = ({ data, getPosts }: Posts) => {
+  console.log(data);
+
+  const { id: IdParams } = useParams();
   const navigate = useNavigate();
 
   const openPost = (id: string): void => {
     navigate(`/${id}`);
-  }
-  
+  };
+
   const [flags, setFlags] = useState<Flags>({
     like: false,
     dislike: false,
@@ -40,29 +45,31 @@ const ItemsPost = ({ data, getPosts }: Posts) => {
 
   const headers = {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`
-    }
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
   };
   const Liked = async () => {
-    await API.get(`/posts/${data.id}/like`, headers).then((item) => {
-      if(item.data.like === 1){
-        setFlags({...flags, like: true, dislike: false});
-        getPosts();
-      }
+    await API.get(`/posts/${data.id || IdParams}/like`, headers)
+      .then((item) => {
+        if (item.data.like === 1) {
+          setFlags({ ...flags, like: true, dislike: false });
+          getPosts();
+        }
 
-      if(item.data.dislike === 1){
-        setFlags({...flags, like: false, dislike: true});
-        getPosts();
-      }
-    }).catch((err) => {
-      console.log(err);
-    })
-  }
+        if (item.data.dislike === 1) {
+          setFlags({ ...flags, like: false, dislike: true });
+          getPosts();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     Liked();
     getPosts();
-  }, [flags.like, flags.dislike]);  
+  }, [flags.like, flags.dislike]);
 
   const toogleLike = () =>
     setFlags({ ...flags, like: !flags.like, dislike: false });
@@ -70,17 +77,24 @@ const ItemsPost = ({ data, getPosts }: Posts) => {
     setFlags({ ...flags, dislike: !flags.dislike, like: false });
 
   const like = async (): Promise<void> => {
-    await API.post(`/posts/${data.id}/like`, {like: true}, headers).then(() => {
-      toogleLike();  
+    await API.post(
+      `/posts/${data.id || IdParams}/like`,
+      { like: true },
+      headers
+    ).then(() => {
+      toogleLike();
     });
-  }
+  };
 
   const dislike = async (): Promise<void> => {
-    await API.post(`/posts/${data.id}/like`, {like: false}, headers).then(() => {
-      toogleDislike();   
+    await API.post(
+      `/posts/${data.id || IdParams}/like`,
+      { like: false },
+      headers
+    ).then(() => {
+      toogleDislike();
     });
-  }
-
+  };
 
   return (
     <>
@@ -96,7 +110,13 @@ const ItemsPost = ({ data, getPosts }: Posts) => {
           Enviado por: <strong>{data.creatorName}</strong>
         </Text>
 
-        <Text fontSize="18px" color="black" fontWeight="400" w="100%" onClick={() => openPost(data.id)}>
+        <Text
+          fontSize="18px"
+          color="black"
+          fontWeight="400"
+          w="100%"
+          onClick={() => openPost(data.id)}
+        >
           {data.content}
         </Text>
 
@@ -167,4 +187,4 @@ const ItemsPost = ({ data, getPosts }: Posts) => {
   );
 };
 
-export default ItemsPost
+export default ItemsPost;
