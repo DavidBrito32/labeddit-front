@@ -123,10 +123,31 @@ export const Modal = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #00000066;
+    background-color: #00000080;
     z-index: 10;
     top: 0;
     left: 0;
+`;
+
+export const Overlay = styled.div`
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #00000080;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    transition-duration: 300ms;
+    opacity: 0;
+    visibility: hidden;
+
+        &.active{
+            visibility: visible;
+            opacity: 1;
+        }
 `;
 
 
@@ -158,6 +179,7 @@ export const Text = styled.p<StyledProps>`
     @media only screen and (max-width: 500px){
         display: ${props => props.display};
         color: ${props => props.color || "black"};
+        background: ${props => props.bg};
         text-align: ${props => props.textAlign};
         font-size: ${props => props.fontSize || "black"};
         font-weight: ${props => props.fontWeight || "normal"};
@@ -432,3 +454,4 @@ export const Items = styled.li<StyledProps>`
         flex-wrap: ${props => props.wrap};
     }
 `;
+

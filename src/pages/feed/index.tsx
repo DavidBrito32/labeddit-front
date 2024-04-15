@@ -23,6 +23,7 @@ interface CreatePost {
 
 const FeedPage = () => {
   const { data, error, loading, getPosts } = usePosts();
+  
   const [time, setTime] = useState<boolean>(false);
   const {
     register,
